@@ -1,0 +1,6 @@
+name: Site Information
+description: Custom module for add the field in site information form.
+core: 8.x
+package: Custom
+type: module
+version: 8.x-6.3

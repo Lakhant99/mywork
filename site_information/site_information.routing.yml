@@ -1,0 +1,7 @@
+site_information.get_node_data:
+  path: '/data/node_page/{id}'
+  defaults:
+    _controller: '\Drupal\site_information\Controller\SiteController::data'
+    _title: 'node Data'
+  requirements:
+    _permission: 'access content'
