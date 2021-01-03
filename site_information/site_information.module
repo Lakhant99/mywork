@@ -9,10 +9,10 @@ function site_information_form_system_site_information_settings_alter(&$form, Fo
   $form['site_information']['site_api_key'] = array(
     '#type' => 'textfield',
     '#title' => t('Site API Key'),
-    '#default_value' => $site_api,
+    '#default_value' => !empty($site_api) ? $site_api : t('No API key yet'),
     '#placeholder'=> t('No API key yet'),
   );
-  if(!empty($site_api)) {
+  if(!empty($site_api) && $site_api != 'No API key yet') {
   	$value = t('Update Configuration');
   	$path = $host . 'data/node_page/' . $site_api; 
   	$form['site_information']['help'] = [
@@ -38,7 +38,9 @@ function my_users_form_site_information_form_validate(&$form, &$form_state) {
    $query->condition('status', 1);
    $query->condition('type', $bundle);
    $entity_ids = $query->execute();
-   if(!in_array($api_key, $entity_ids)) {
+   $arr2 = array("No API key yet");
+   $entity_ids = array_merge($entity_ids, $arr2);
+   if(!in_array($api_key, $entity_ids) && $api_key != '') {
    	$form_state->setErrorByName('site_api_key', t('access denied.'));
    }
 }
@@ -49,9 +51,9 @@ function my_users_form_site_information_form_validate(&$form, &$form_state) {
 function site_information_form_submit(&$form, FormStateInterface &$form_state) {
 	// kint($form_state->getValue('site_api_key'));
 	// die();
-	 $config = \Drupal::service('config.factory')->getEditable('api_key.settings');
-     $config->set('site_api_key', $form_state->getValue('site_api_key'));
-     $config->save();
-     $message = "The Site API Key has been saved";
-     drupal_set_message($message);
+	$config = \Drupal::service('config.factory')->getEditable('api_key.settings');
+  $config->set('site_api_key', $form_state->getValue('site_api_key'));
+  $config->save();
+  $message = "The Site API Key has been saved";
+  drupal_set_message($message);
 }
